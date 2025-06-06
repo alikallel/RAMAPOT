@@ -1,0 +1,34 @@
+# filebeat-redis-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat-redis
+  labels:
+    app: filebeat-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebeat-redis
+  template:
+    metadata:
+      labels:
+        app: filebeat-redis
+    spec:
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:8.10.4
+        args: ["-e", "-c", "/etc/filebeat/filebeat.yml"]
+        volumeMounts:
+        - name: filebeat-config
+          mountPath: /etc/filebeat/filebeat.yml
+          subPath: filebeat.yml
+        - name: redis-logs
+          mountPath: /redis-logs
+      volumes:
+      - name: filebeat-config
+        configMap:
+          name: filebeat-redis-config
+      - name: redis-logs
+        persistentVolumeClaim:
+          claimName: redis-data

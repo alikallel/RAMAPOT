@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cowrie-userdb
+data:
+  userdb.txt: |
+    root:x:admin
+    admin:x:password
+    guest:x:guest
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cowrie-config
+data:
+  motd: |
+    Ubuntu 20.04.6 LTS server tty1

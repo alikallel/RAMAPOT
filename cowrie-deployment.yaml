@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cowrie
+  labels:
+    app: cowrie
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cowrie
+  template:
+    metadata:
+      labels:
+        app: cowrie
+    spec:
+      containers:
+      - name: cowrie
+        image: cowrie/cowrie
+        ports:
+        - containerPort: 2222
+        volumeMounts:
+        - name: cowrie-data
+          mountPath: /cowrie/cowrie-git/var/lib/cowrie/tty/
+          subPath: session-logs
+        - name: cowrie-data
+          mountPath: /cowrie/cowrie-git/var/lib/cowrie/downloads/
+          subPath: user-files
+        - name: cowrie-data
+          mountPath: /cowrie/cowrie-git/var/log/cowrie/
+          subPath: logs
+        - name: cowrie-config
+          mountPath: /cowrie/cowrie-git/honeyfs/etc/motd
+          subPath: motd
+        - name: cowrie-userdb
+          mountPath: /cowrie/cowrie-git/etc/userdb.txt
+          subPath: userdb.txt
+      volumes:
+      - name: cowrie-data
+        persistentVolumeClaim:
+          claimName: cowrie-data
+      - name: cowrie-config
+        configMap:
+          name: cowrie-config
+      - name: cowrie-userdb
+        configMap:
+          name: cowrie-userdb

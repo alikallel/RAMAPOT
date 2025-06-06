@@ -1,0 +1,14 @@
+resources:
+  requests:
+    memory: 1Gi
+  limits:
+    memory: 1Gi
+
+service:
+  type: ClusterIP
+
+kibanaConfig:
+  kibana.yml: |
+    xpack.encryptedSavedObjects.encryptionKey: "32characterlongencryptionkey12345678901"
+    xpack.security.encryptionKey: "32characterlongencryptionkey12345678901"
+    xpack.reporting.encryptionKey: "32characterlongencryptionkey12345678901"

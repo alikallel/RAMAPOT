@@ -1,0 +1,30 @@
+# redishoneypot-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redishoneypot
+  labels:
+    app: redishoneypot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redishoneypot
+  template:
+    metadata:
+      labels:
+        app: redishoneypot
+    spec:
+      containers:
+      - name: redishoneypot
+        image: redishoneypot:latest
+        imagePullPolicy: Never  # This tells Kubernetes to use local image only
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-logs
+          mountPath: /app/logs
+      volumes:
+      - name: redis-logs
+        persistentVolumeClaim:
+          claimName: redis-data

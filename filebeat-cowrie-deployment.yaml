@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat
+  labels:
+    app: filebeat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:8.10.4
+        args: ["-e", "-c", "/etc/filebeat/filebeat.yml"]
+        volumeMounts:
+        - name: filebeat-config
+          mountPath: /etc/filebeat/filebeat.yml
+          subPath: filebeat.yml
+        - name: cowrie-data
+          mountPath: /cowrie-logs
+          subPath: logs
+      volumes:
+      - name: filebeat-config
+        configMap:
+          name: filebeat-config
+      - name: cowrie-data
+        persistentVolumeClaim:
+          claimName: cowrie-data

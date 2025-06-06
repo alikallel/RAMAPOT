@@ -1,0 +1,57 @@
+# filebeat-redis-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-redis-config
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+    - type: log
+      enabled: true
+      paths:
+        - /redis-logs/redis.log
+      json.keys_under_root: true
+      json.add_error_key: true
+      json.message_key: msg
+      fields:
+        event.dataset: redis.honeypot
+        event.module: redis
+      fields_under_root: true
+      processors:
+        - add_host_metadata: ~
+        - add_cloud_metadata: ~
+        - decode_json_fields:
+            fields: ["message"]
+            target: ""
+            overwrite_keys: true
+        - rename:
+            fields:
+              - from: "addr"
+                to: "source.ip"
+              - from: "action"
+                to: "event.action"
+              - from: "time"
+                to: "@timestamp"
+        - drop_fields:
+            fields: ["message"]
+
+    setup.ilm.enabled: false
+    setup.template.enabled: false
+
+    output.elasticsearch:
+      hosts: ["https://elasticsearch-master.honeypot.svc.cluster.local:9200"]
+      username: "elastic"
+      password: "U2sTpqA409jpGVHK"
+      ssl.verification_mode: "none"
+      allow_older_versions: true
+      indices:
+        - index: "honeypot-redis-%{[agent.version]}-%{+yyyy.MM.dd}"
+          when.equals:
+            event.dataset: "redis.honeypot"
+
+    setup.dashboards.enabled: true
+
+    setup.kibana:
+      host: "http://kibana-kibana:5601"
+      username: "elastic"
+      password: "U2sTpqA409jpGVHK"

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-elasticpot-config
+  namespace: honeypot
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+    - type: log
+      enabled: true
+      paths:
+        - /opt/elasticpot/log/elasticpot.json
+      json.keys_under_root: true
+      json.add_error_key: true
+      json.message_key: message
+      tail_files: true
+
+    processors:
+      - add_host_metadata: ~
+      - rename:
+          fields:
+            - from: "src_ip"
+              to: "source.ip"
+            - from: "dst_ip"
+              to: "destination.ip"
+
+    output.elasticsearch:
+      hosts: ["https://elasticsearch-master.honeypot.svc.cluster.local:9200"]
+      username: "elastic"
+      password: "U2sTpqA409jpGVHK"
+      ssl.verification_mode: "none"
+      indices:
+        - index: "elasticpot-logs-%{+yyyy.MM.dd}"

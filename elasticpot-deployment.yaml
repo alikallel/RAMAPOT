@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticpot
+  namespace: honeypot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticpot
+  template:
+    metadata:
+      labels:
+        app: elasticpot
+    spec:
+      containers:
+      - name: elasticpot
+        image: elasticpot:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 9200
+        volumeMounts:
+        - name: elasticpot-config
+          mountPath: /opt/elasticpot/etc/honeypot.cfg
+          subPath: honeypot.cfg
+        - name: elasticpot-logs
+          mountPath: /opt/elasticpot/log
+
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:8.10.4
+        args: ["-e", "-c", "/etc/filebeat/filebeat.yml"]
+        volumeMounts:
+        - name: filebeat-config
+          mountPath: /etc/filebeat/filebeat.yml
+          subPath: filebeat.yml
+        - name: elasticpot-logs
+          mountPath: /opt/elasticpot/log
+          readOnly: true
+
+      volumes:
+      - name: elasticpot-config
+        configMap:
+          name: elasticpot-config
+      - name: filebeat-config
+        configMap:
+          name: filebeat-elasticpot-config
+      - name: elasticpot-logs
+        persistentVolumeClaim:
+          claimName: elasticpot-data

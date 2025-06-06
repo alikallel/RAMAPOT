@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  elasticpot:
+    build: .
+    container_name: elasticpot
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./logs:/opt/elasticpot/log
+      - ./honeypot/honeypot.cfg:/opt/elasticpot/etc/honeypot.cfg
+    restart: unless-stopped
+    networks:
+      - honeypot_network
+
+
+networks:
+  honeypot_network:
+    external: true

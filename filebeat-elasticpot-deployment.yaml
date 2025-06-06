@@ -1,0 +1,33 @@
+# filebeat-elasticpot-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat-elasticpot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebeat-elasticpot
+  template:
+    metadata:
+      labels:
+        app: filebeat-elasticpot
+    spec:
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:8.10.4
+        args: ["-e", "-c", "/etc/filebeat/filebeat.yml"]
+        volumeMounts:
+        - name: filebeat-config
+          mountPath: /etc/filebeat/filebeat.yml
+          subPath: filebeat.yml
+        - name: elasticpot-logs
+          mountPath: /elasticpot-logs
+          subPath: elasticpot.json
+          readOnly: true
+      volumes:
+      - name: filebeat-config
+        configMap:
+          name: filebeat-elasticpot-config
+      - name: elasticpot-logs
+        emptyDir: {}

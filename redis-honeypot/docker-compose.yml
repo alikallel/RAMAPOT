@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  redishoneypot:
+    build: .
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs

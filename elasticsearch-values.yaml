@@ -1,0 +1,11 @@
+replicas: 1
+minimumMasterNodes: 1
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 4Gi
+esConfig:
+  elasticsearch.yml: |
+    xpack.security.enabled: true
+    xpack.security.authc.api_key.enabled: true
