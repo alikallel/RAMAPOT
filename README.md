@@ -222,6 +222,8 @@ Build visualizations for comprehensive monitoring:
 - **Pie Charts**: Success/failure ratios and attack distribution
 - **Metrics**: Total events count and connection statistics
 
+![Dashboard](images/cowrie_dashboard.png)
+
 ## Security Monitoring
 
 ### Create Detection Rules
@@ -236,6 +238,8 @@ Build visualizations for comprehensive monitoring:
 - **Successful Honeypot Logins**: Legitimate access to honeypots
 
 View generated alerts in **Security** → **Alerts**
+
+![Alerts](images/cowrie_alerts.png)
 
 ## Troubleshooting
 
