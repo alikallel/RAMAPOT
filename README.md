@@ -1,7 +1,7 @@
 # RAMAPOT 
 
 <p align="center">
-  <img src="images/logo.jpg" alt="Project Logo" width="300" style="border-radius: 10%;">
+  <img src="images/logo.png" alt="Project Logo" width="300" style="border-radius: 10%;">
 </p>
 
 **Multi-Honeypot Deployment with Centralized Logging on Kubernetes**
