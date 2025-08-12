@@ -1,5 +1,9 @@
 # RAMAPOT 
 
+<p align="center">
+  <img src="images/logo.jpg" alt="Project Logo" width="300" style="border-radius: 10%;">
+</p>
+
 **Multi-Honeypot Deployment with Centralized Logging on Kubernetes**
 
 RAMAPOT is a honeypot deployment solution that orchestrates multiple honeypots (Cowrie SSH, Elasticpot, and Redis) with centralized logging using the Elastic Stack on a k3d Kubernetes cluster.
